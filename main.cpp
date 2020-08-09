@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	//ShaCoin::P2PNode *p2pNode = ShaCoin::P2PNode::Instance(argv[1]);
 	//p2pNode->Listen();
 
-	//´´½¨Çø¿éÁ´¡¢Ğ´Èë´´ÊÀÇø¿é
+	//åˆ›å»ºåŒºå—é“¾ã€å†™å…¥åˆ›ä¸–åŒºå—
 	ShaCoin::BlockChain *blockChain = ShaCoin::BlockChain::Instance();
 	//ShaCoin::Block b1 = blockChain->CreateBlock(02, 6.3, 293471924);
 	//std::cout << blockChain->GetJsonFromBlockList() << std::endl;
@@ -52,31 +52,30 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Please input command:" << std::endl;
 		getline(std::cin, strInputCmd);
-		std::vector<std::string> vec_str = ShaCoin::Cryptography::StringSplit(strInputCmd, ' ');//·Ö¸î×Ö·û´®
+		std::vector<std::string> vec_str = ShaCoin::Cryptography::StringSplit(strInputCmd, ' ');//åˆ†å‰²å­—ç¬¦ä¸²
 
 		if (vec_str.size() < 1)
 			continue;
 
-		if (ShaCoin::Cryptography::CompareNoCase(vec_str[0], "addr"))//Éú³ÉÕË»§
+		if (ShaCoin::Cryptography::CompareNoCase(vec_str[0], "addr"))//ç”Ÿæˆè´¦æˆ·
 		{
 			ShaCoin::KeyPair keyPair;
 			ShaCoin::Cryptography::Createkey(keyPair);
 			std::string addr = blockChain->CreateNewAddress(keyPair);
 
-			std::cout << "Public key is " << ShaCoin::Cryptography::Base64Encode(keyPair.pubKey.key, keyPair.pubKey.len) << std::endl;//base64encode×ªÎª×Ö½ÚÂë¸ñÊ½ÔÙ¼ÓÃÜ
+			std::cout << "Public key is " << ShaCoin::Cryptography::Base64Encode(keyPair.pubKey.key, keyPair.pubKey.len) << std::endl;//base64encodeè½¬ä¸ºå­—èŠ‚ç æ ¼å¼å†åŠ å¯†
 			std::cout << "Private key is " << ShaCoin::Cryptography::Base64Encode(keyPair.priKey.key, keyPair.priKey.len) << std::endl;
 			std::cout << "Address is " << addr << std::endl;
 			continue;
 		}
-		//ÊäÈë¸ñÊ½£ºts µØÖ·1 µØÖ·2 ½»Ò×¶îfloat ¹«Ô¿ Ë½Ô¿
+		//è¾“å…¥æ ¼å¼ï¼šts åœ°å€1 åœ°å€2 äº¤æ˜“é¢float å…¬é’¥ ç§é’¥
 		else if (ShaCoin::Cryptography::CompareNoCase(vec_str[0], "ts"))//
 		{
 			if (vec_str.size() < 6)//
 				continue;
 
 			ShaCoin::KeyPair kp;
-			//×÷ÓÃÊÇ½«Ä³Ò»¿éÄÚ´æÖĞµÄÄÚÈİÈ«²¿ÉèÖÃÎªÖ¸¶¨µÄÖµ£¬ º¯ÊıÍ¨³£ÎªĞÂÉêÇëµÄÄÚ´æ×ö³õÊ¼»¯¹¤×÷
-			memset(&kp, 0, sizeof(kp));//½«ÒÑ¿ª±ÙÄÚ´æ¿Õ¼ä kp µÄkp¸ö×Ö½ÚµÄÖµÉèÎªÖµ0
+			memset(&kp, 0, sizeof(kp));
 			ShaCoin::Cryptography::Base64Decode(vec_str[4], kp.pubKey.key, sizeof(kp.pubKey.key), &kp.pubKey.len);
 			ShaCoin::Cryptography::Base64Decode(vec_str[5], kp.priKey.key, sizeof(kp.priKey.key), &kp.priKey.len);
 
@@ -100,9 +99,9 @@ int main(int argc, char **argv)
 
 			int count;
 			if (vec_str.size() >= 3)
-				count = stoi(vec_str[2]);//½«ÍÚ¿ó´ÎÊı×Ö·û´®×ª»¯ÎªÊ®½øÖÆ
+				count = stoi(vec_str[2]);
 			else
-				count = 1;//Èô²»ÊäÈëÍÚ¿ó´ÎÊıÔòÄ¬ÈÏÍÚ1¸ö
+				count = 1;//è‹¥ä¸è¾“å…¥æŒ–çŸ¿æ¬¡æ•°åˆ™é»˜è®¤æŒ–1ä¸ª
 
 			if (count < 1)
 				count = 1;
@@ -121,13 +120,11 @@ int main(int argc, char **argv)
 
 			continue;
 		}
-		//ÉÏÁ´ Òª¸Ä£¬Ó¦¸ÃÊÇ¹²Ê¶
 		else if (ShaCoin::Cryptography::CompareNoCase(vec_str[0], "Merge"))
 		{
-//			p2pNode->MergeChain();
 			continue;
 		}
-		//±éÀúÇø¿éºÍ½»Ò×²éÑ¯Óà¶î
+		//éå†åŒºå—å’Œäº¤æ˜“æŸ¥è¯¢ä½™é¢
 		else if (ShaCoin::Cryptography::CompareNoCase(vec_str[0], "Balances"))
 		{
 			if (vec_str.size() < 2)
@@ -187,7 +184,7 @@ int main(int argc, char **argv)
 //			printf("%02X", keyPair.pubKey.key[i]);
 //	}
 //	cout << endl;
-//	cout << "SK+PKµÈ²ÎÊı:" << keyPair.priKey.len << endl;
+//	cout << "SK+PKç­‰å‚æ•°:" << keyPair.priKey.len << endl;
 //	for (int i = 0; i < keyPair.priKey.len; i++) {
 //		if (!(i % 8))
 //			cout << endl;
@@ -205,7 +202,7 @@ int main(int argc, char **argv)
 //
 
 
-	//std::cout << "Public key is " << ShaCoin::Cryptography::Base64Encode(keyPair.pubKey.key, keyPair.pubKey.len) << std::endl;//base64encode×ªÎª×Ö½ÚÂë¸ñÊ½ÔÙ¼ÓÃÜ
+	//std::cout << "Public key is " << ShaCoin::Cryptography::Base64Encode(keyPair.pubKey.key, keyPair.pubKey.len) << std::endl;//base64encodeè½¬ä¸ºå­—èŠ‚ç æ ¼å¼å†åŠ å¯†
 	//std::cout << "Private key is " << ShaCoin::Cryptography::Base64Encode(keyPair.priKey.key, keyPair.priKey.len) << std::endl;
 
 	//std::cout << "pk_len " << (ShaCoin::Cryptography::Base64Encode(keyPair.pubKey.key, keyPair.pubKey.len)).length() << endl;
