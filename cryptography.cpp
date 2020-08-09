@@ -31,13 +31,14 @@ namespace ShaCoin
 	{
 
 	}
-	//¹şÏ£º¯Êı
+	//å“ˆå¸Œå‡½æ•°
 	std::string Cryptography::GetHash(void const* buffer, std::size_t len)
 	{
 		std::stringstream ss;
 		boost::uuids::detail::sha1 sha;
 		sha.process_bytes(buffer, len);
-		unsigned int digest[5];      //ÕªÒªµÄ·µ»ØÖµ
+		//ä¿å­˜æ‘˜è¦
+		unsigned int digest[5];      
 		sha.get_digest(digest);
 		for (int i = 0; i < 5; ++i)
 			ss << std::hex << digest[i];
@@ -45,7 +46,7 @@ namespace ShaCoin
 		return ss.str();
 	}
 
-	//½«¶ş½øÖÆµÄ¹şÏ£Öµ×ª»»³Ébase64×Ö·û¼¯µÄ×Ö·û´®
+	//å°†äºŒè¿›åˆ¶çš„å“ˆå¸Œå€¼è½¬æ¢æˆbase64å­—ç¬¦é›†çš„å­—ç¬¦ä¸²
 	std::string Cryptography::Base64Encode(const void*buff, int len)
 	{
 		int i;
@@ -81,7 +82,7 @@ namespace ShaCoin
 		return str;
 	}
 
-	// opensslµÄ½âÂë
+	// opensslçš„è§£ç 
 	void Cryptography::Base64Decode(const std::string &str64, void *outbuff, size_t outsize, size_t *outlen)
 	{
 		unsigned int i;
@@ -128,33 +129,33 @@ namespace ShaCoin
 		*outlen += outl;
 	}
 
-	// Éú³ÉËæ»ú¹«Ë½Ô¿¶Ô
+	// ç”Ÿæˆéšæœºå…¬ç§é’¥å¯¹
 	void Cryptography::Createkey(KeyPair &keyPair)
 	{
 		unsigned char *p = NULL;
 		keyPair.priKey.len = -1;
 		keyPair.pubKey.len = -1;
 
-		EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);//Ñ¡ÔñºÃÁËÇúÏß
+		EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);//é€‰æ‹©å¥½äº†æ›²çº¿
 		if (!group)
 			return;
-		//1¡¢ÉùÃ÷EC_KEY *key½á¹¹£¬ÍÖÔ²ÇúÏßµÄ²ÎÊı¡¢¹«Ë½Ô¿¶¼±£´æÔÚ´Ë½á¹¹ÖĞ
-		//2¡¢EC_GROUP½á¹¹±£´æÍÖÔ²ÇúÏßµÄ²ÎÊı
-		EC_KEY *key = EC_KEY_new();//Éú³ÉÒ»¸öEC_KEY½á¹¹
+		//1ã€å£°æ˜EC_KEY *keyç»“æ„ï¼Œæ¤­åœ†æ›²çº¿çš„å‚æ•°ã€å…¬ç§é’¥éƒ½ä¿å­˜åœ¨æ­¤ç»“æ„ä¸­
+		//2ã€EC_GROUPç»“æ„ä¿å­˜æ¤­åœ†æ›²çº¿çš„å‚æ•°
+		EC_KEY *key = EC_KEY_new();//ç”Ÿæˆä¸€ä¸ªEC_KEYç»“æ„
 		if (!key)
 		{
 			EC_GROUP_free(group);
 			return;
 		}
 
-		if (!EC_KEY_set_group(key, group))//½«EC_GROUP groupÖĞµÄÄÚÈİÌî³äµ½EC_KEY keyÖĞ£¬Èç¹ûÃ»ÌîĞ´½øÈ¥£¬ÔòÊÍ·Å
+		if (!EC_KEY_set_group(key, group))//å°†EC_GROUP groupä¸­çš„å†…å®¹å¡«å……åˆ°EC_KEY keyä¸­ï¼Œå¦‚æœæ²¡å¡«å†™è¿›å»ï¼Œåˆ™é‡Šæ”¾
 		{
 			EC_GROUP_free(group);
 			EC_KEY_free(key);
 			return;
 		}
 
-		if (!EC_KEY_generate_key(key))//Éú³É¹«Ë½Ô¿¶ÔÌî³ä½økeyÖĞ
+		if (!EC_KEY_generate_key(key))//ç”Ÿæˆå…¬ç§é’¥å¯¹å¡«å……è¿›keyä¸­
 		{
 			EC_GROUP_free(group);
 			EC_KEY_free(key);
@@ -177,7 +178,7 @@ namespace ShaCoin
 			return;
 		}
 		p = keyPair.priKey.key;
-		keyPair.priKey.len = i2d_ECPrivateKey(key, &p);//½«Ë½Ô¿Êı¾İµ¼ÈëË½Ô¿½á¹¹ÖĞ
+		keyPair.priKey.len = i2d_ECPrivateKey(key, &p);//å°†ç§é’¥æ•°æ®å¯¼å…¥ç§é’¥ç»“æ„ä¸­
 
 
 		keyPair.pubKey.len = i2o_ECPublicKey(key, NULL);
@@ -195,7 +196,7 @@ namespace ShaCoin
 		EC_KEY_free(key);
 	}
 
-	//¶ÔdataÇ©Ãû´æÔÚsignÀï
+	//å¯¹dataç­¾åå­˜åœ¨signé‡Œ
 	bool Cryptography::Signature(const KeyData &priKey, const void *data, int datalen, unsigned char *sign, size_t signszie, unsigned int *signlen)
 	{
 		EC_KEY *ec_key = NULL;
@@ -258,7 +259,7 @@ namespace ShaCoin
 			EC_KEY_free(ec_key);
 			return ret;
 		}
-		//dataºÍsignÑéÖ¤
+		//dataå’ŒsignéªŒè¯
 		ret = ECDSA_verify(0, (const unsigned char*)data, datalen, sign,
 			signlen, ec_key);
 
@@ -274,7 +275,7 @@ namespace ShaCoin
 		return strTmp;
 	}
 
-	//±È½ÏÁ½¸ö×Ö·û´®ÊÇ·ñÏàÍ¬
+	//æ¯”è¾ƒä¸¤ä¸ªå­—ç¬¦ä¸²æ˜¯å¦ç›¸åŒ
 	bool Cryptography::CompareNoCase(const std::string &strA, const std::string &strB)
 	{
 		std::string str1 = StringToLower(strA);
@@ -282,17 +283,17 @@ namespace ShaCoin
 		return (str1 == str2);
 	}
 
-	//ÔÚstrÀï¸ù¾İsep£¨ÓÃµÄÊ±ºòÊÇ¿Õ¸ñ£©·Ö¸î×Ó´®µ½ÈİÆ÷Àï
+	//åœ¨stré‡Œæ ¹æ®sepï¼ˆç”¨çš„æ—¶å€™æ˜¯ç©ºæ ¼ï¼‰åˆ†å‰²å­ä¸²åˆ°å®¹å™¨é‡Œ
 	std::vector<std::string> Cryptography::StringSplit(const std::string &str, const char sep)
 	{
 		std::vector<std::string> strvec;
-		//ÓÃÓÚ±£´æstringÀàĞÍµÄ³¤¶È
+		//ç”¨äºä¿å­˜stringç±»å‹çš„é•¿åº¦
 		std::string::size_type pos1, pos2;
-		//pos2Ö¸ÏòÕÒµ½¿Õ¸ñµÄÎ»ÖÃ
+		//pos2æŒ‡å‘æ‰¾åˆ°ç©ºæ ¼çš„ä½ç½®
 		pos2 = str.find(sep);
-		//pos1Ö¸Ïò³õÊ¼Î»ÖÃ
+		//pos1æŒ‡å‘åˆå§‹ä½ç½®
 		pos1 = 0;
-		//·µ»ØÖµÎªÄ¿±ê×Ö·ûµÄÎ»ÖÃ£¬µ±Ã»ÓĞÕÒµ½Ä¿±ê×Ö·ûÊ±·µ»Ønpos
+		//è¿”å›å€¼ä¸ºç›®æ ‡å­—ç¬¦çš„ä½ç½®ï¼Œå½“æ²¡æœ‰æ‰¾åˆ°ç›®æ ‡å­—ç¬¦æ—¶è¿”å›npos
 		while (std::string::npos != pos2)
 		{
 			strvec.push_back(str.substr(pos1, pos2 - pos1));
