@@ -18,23 +18,23 @@ block = {
 }
 
 */
-#define HAVE_STRUCT_TIMESPEC////´Ë´¦¸Ä¶¯
+#define HAVE_STRUCT_TIMESPEC
 #include <list>
 #include <string>
 #include <ctime>
 #include <algorithm>
-#include<pthread.h>////////////////ÓĞ¸Ä¶¯
+#include<pthread.h>
 #include "cryptography.h"
 //clear
 namespace ShaCoin
 {
-	typedef struct __transactions//½»Ò×Àà
+	typedef struct __transactions//äº¤æ˜“ç±»
 	{
 		std::string sender;
 		std::string recipient;
 		float amount;
 
-		bool operator == (const struct __transactions & value) const//ÖØÔØ==²Ù×÷·û£¬ÓÃÓÚ±È½ÏÁ½¸öÇø¿éÊÇ·ñÏàÍ¬
+		bool operator == (const struct __transactions & value) const
 		{
 			return
 				this->sender == value.sender &&
@@ -43,13 +43,14 @@ namespace ShaCoin
 		}
 	}Transactions;
 
-	typedef struct __block//Çø¿éÀà
+	typedef struct __block//åŒºå—ç±»
 	{
 		int index;
-		/*time_tÀàĞÍÊı¾İÓÃÀ´±£´æ´Ó1970Äê1ÔÂ1ÈÕ0Ê±0·Ö0Ãëµ½ÏÖÔÚÊ±¿ÌµÄÃëÊı£¡ÓÃtime()Õâ¸öº¯Êı»ñÈ¡£¡*/
+		/*time_tç±»å‹æ•°æ®ç”¨æ¥ä¿å­˜ä»1970å¹´1æœˆ1æ—¥0æ—¶0åˆ†0ç§’åˆ°ç°åœ¨æ—¶åˆ»çš„ç§’æ•°*/
 		time_t timestamp;
 		std::list<Transactions> lst_ts;
-		long int proof;//ÉÏÒ»¸öÇø¿éµÄproof+Ò»¸öËæ»úÊıµÄ½á¹û£¨ÆäÊµÒ²¿ÉÒÔÖ»ÓÃËæ»úÊı±íÊ¾£©ÍÚ¿óÊÇÓÃÒ»¸ö¹Ì¶¨×Ö·û´®+proof×ª»»µÄ×Ö·û´®½øĞĞ¹şÏ£µÄ½á¹û£¬Èç¹ûÓĞ0¾Í³É¹¦
+		//ä¸Šä¸€ä¸ªåŒºå—çš„proof+ä¸€ä¸ªéšæœºæ•°çš„ç»“æœï¼ˆå…¶å®ä¹Ÿå¯ä»¥åªç”¨éšæœºæ•°è¡¨ç¤ºï¼‰æŒ–çŸ¿æ˜¯ç”¨ä¸€ä¸ªå›ºå®šå­—ç¬¦ä¸²+proofè½¬æ¢çš„å­—ç¬¦ä¸²è¿›è¡Œå“ˆå¸Œçš„ç»“æœï¼Œå¦‚æœæœ‰0å°±æˆåŠŸ
+		long int proof;
 		std::string previous_hash;
 
 		bool operator == (const struct __block & value) const
@@ -67,20 +68,19 @@ namespace ShaCoin
 	class BlockChain
 	{
 	public:
-		static BlockChain *Instance();//Éú³ÉµÄÇø¿éÁ´ÊµÀı
-		std::string GetJsonFromBlock(Block &block);//jsonÎÄ±¾´«ÊäÊı¾İĞ¡£¬±ãÓÚµ÷ÊÔÀ©Õ¹£¬Çø¿éÁ´µÄÊı¾İÑ¡ÓÃËüÀ´ÊµÏÖ
+		static BlockChain *Instance();//ç”Ÿæˆçš„åŒºå—é“¾å®ä¾‹
+		std::string GetJsonFromBlock(Block &block);//jsonæ–‡æœ¬ä¼ è¾“æ•°æ®å°ï¼Œä¾¿äºè°ƒè¯•æ‰©å±•
 		std::string GetJsonFromTransactions(Transactions &ts);
 		Block GetBlockFromJson(const std::string &json);
 		Transactions GetTransactionsFromJson(const std::string &json);
-		std::string GetJsonFromBlockList();//½«Çø¿éÁ´×ªÎªjson
-		std::string GetJsonFromTransactionsList();//½«½»Ò××ªÎªjson
-		// block = new Block()
+		std::string GetJsonFromBlockList();
+		std::string GetJsonFromTransactionsList();
 		std::list<Block> GetBlockListFromJson(const std::string &json);
 		void GetTransactionsListFromJson(const std::string &json);
-		//´ÓÕâÏÂÃæ¿ªÊ¼ÖØĞ´:
-		//¹«Ë½Ô¿¶ÔÉú³ÉµØÖ·
+
+		//å…¬ç§é’¥å¯¹ç”Ÿæˆåœ°å€
 		std::string CreateNewAddress(const KeyPair &keyPair);
-		//ÏÂÃæµÄ²»ÓÃĞ´
+		//ä¸‹é¢çš„ä¸ç”¨å†™
 		Transactions CreateTransactions(const std::string &sender, const std::string &recipient, float amount);
 		Block CreateBlock(int index, time_t timestamp, long int proof);
 		int WorkloadProof(int last_proof);
@@ -88,28 +88,28 @@ namespace ShaCoin
 		std::string Mining(const std::string &addr);
 		//
 		int CheckBalances(const std::string &addr);
-		void DeleteDuplicateTransactions(const Block &block);//ÏÈ²»Ğ´
+		void DeleteDuplicateTransactions(const Block &block);
 		//
-		void MergeBlockChain(const std::string &json);//Ã»µ÷ÓÃ¹ı£¬Ê²Ã´¹¦ÄÜ£¿£¿£¿
+		void MergeBlockChain(const std::string &json);
 
-		//ÏòÇø¿éÁ´²åÈëÇø¿é
+		//å‘åŒºå—é“¾æ’å…¥åŒºå—
 		inline void InsertBlock(const Block &block)
 		{
 			pthread_mutex_lock(&m_mutexBlock);
-			//Èç¹ûÇø¿éÃ»ÔÚÁ´Àï
+			//å¦‚æœåŒºå—æ²¡åœ¨é“¾é‡Œ
 			if (m_lst_block.end() == std::find(m_lst_block.begin(), m_lst_block.end(), block))
-			{	//ÉÏÁ´
+			{	//ä¸Šé“¾
 				m_lst_block.push_back(block);
 			}
 			pthread_mutex_unlock(&m_mutexBlock);
 		}
-		//Ïò½»Ò×³Ø²åÈë½»Ò×
-		inline void InsertTransactions(const Transactions &ts)//insert½»Ò×Ö®Ç°ÏÈËø×¡½»Ò×³ØÏß³Ì
+		//å‘äº¤æ˜“æ± æ’å…¥äº¤æ˜“
+		inline void InsertTransactions(const Transactions &ts)//insertäº¤æ˜“ä¹‹å‰å…ˆé”ä½äº¤æ˜“æ± çº¿ç¨‹
 		{
 			pthread_mutex_lock(&m_mutexTs);
-			if (m_lst_ts.end() == std::find(m_lst_ts.begin(), m_lst_ts.end(), ts))//ÔÚ½»Ò×³ØÀï²éÕÒtsÊ§°Ü
+			if (m_lst_ts.end() == std::find(m_lst_ts.begin(), m_lst_ts.end(), ts))//åœ¨äº¤æ˜“æ± é‡ŒæŸ¥æ‰¾tså¤±è´¥
 			{
-				m_lst_ts.push_back(ts);//ÔÚ½»Ò×³ØlistÎ²²¿¼ÓÈëts
+				m_lst_ts.push_back(ts);//åœ¨äº¤æ˜“æ± listå°¾éƒ¨åŠ å…¥ts
 			}
 			pthread_mutex_unlock(&m_mutexTs);
 		}
@@ -128,10 +128,10 @@ namespace ShaCoin
 		virtual ~BlockChain();
 
 	private:
-		std::list<Transactions> m_lst_ts;//½»Ò×³Ø
-		std::list<Block> m_lst_block;///Çø¿éÁ´list
-		pthread_mutex_t m_mutexTs;//½»Ò×Ëø
-		pthread_mutex_t m_mutexBlock;//Çø¿éÁ´Ëø
+		std::list<Transactions> m_lst_ts;//äº¤æ˜“æ± 
+		std::list<Block> m_lst_block;///åŒºå—é“¾list
+		pthread_mutex_t m_mutexTs;//äº¤æ˜“é”
+		pthread_mutex_t m_mutexBlock;//åŒºå—é“¾é”
 	};
 }
 
